@@ -1,4 +1,4 @@
-package pos;
+package pos.view;
 
 import pos.model.value.object.user.choice.Choice;
 import pos.model.value.object.user.choice.Choices;
@@ -6,9 +6,9 @@ import pos.model.value.object.user.choice.Choices;
 /**
  * Created by Oleksii_Onysymchuk on 3/9/2017.
  */
-public class View {
-    public static final String WRONG_USER_INPUT_VALUE = "[Error] No such choice. Try again.." ;
+public class ConsoleView implements View {
 
+    @Override
     public void printPrompt(Choices userChoices) {
         printLine(userChoices.getGeneralMessage());
         while (userChoices.hasMoreChoices()){
@@ -19,6 +19,7 @@ public class View {
         print("Enter your choice: ");
     }
 
+    @Override
     public void showMessage(String message) {
         printLine(message);
     }

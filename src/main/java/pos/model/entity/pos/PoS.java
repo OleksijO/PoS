@@ -20,52 +20,25 @@ import java.util.*;
 public class PoS implements PosModel {
     private final CoinBank coinBank = new CoinBank();
     private final BeverageBank beverageBank = new BeverageBank();
-    private final Map<Choice, Command> commandMap = new HashMap<>();
+
     private int userBalance = 0;
-    private List<Choice> choices;
 
-    public PoS() {
+    private CommandHolder commandHolder;
 
-        commandMap.put(new Choice(1, "Insert '1' coin"), new InsertCoinCommand(Coin.COIN_1, this));
-        commandMap.put(new Choice(2, "Insert '5' coin"), new InsertCoinCommand(Coin.COIN_5, this));
-        commandMap.put(new Choice(3, "Insert '10' coin"), new InsertCoinCommand(Coin.COIN_10, this));
-        commandMap.put(new Choice(4, "Insert '25' coin"), new InsertCoinCommand(Coin.COIN_25, this));
-        commandMap.put(new Choice(5, "Insert '50' coin"), new InsertCoinCommand(Coin.COIN_50, this));
-        commandMap.put(
-                new Choice(10, "Select " + Beverage.TEA.name + "(" + Beverage.TEA.price + ")"),
-                new PrepareBeverageCommand(Beverage.TEA, this)
-        );
-        commandMap.put(
-                new Choice(11, "Select " + Beverage.COFFEE.name + "(" + Beverage.COFFEE.price + ")"),
-                new PrepareBeverageCommand(Beverage.COFFEE, this)
-        );
-        commandMap.put(
-                new Choice(12, "Select " + Beverage.JUICE.name + "(" + Beverage.JUICE.price + ")"),
-                new PrepareBeverageCommand(Beverage.JUICE, this)
-        );
-        commandMap.put(
-                new Choice(20, "Cancel. Give my money back!"),
-                new CancelCommand(this)
-        );
-        choices = new ArrayList<>(commandMap.keySet());
-        Collections.sort(choices);
+    public PoS(CommandHolder commandHolder) {
+        this.commandHolder = commandHolder;
     }
 
     @Override
     public Choices getUserChoices() {
         return new Choices("----------------------------------------------------------\n" +
                 "You're balance is " + userBalance + ". \n" +
-                "Please, make your choice:", choices);
+                "Please, make your choice:", commandHolder.getAllChoices());
     }
 
     @Override
     public OperationResult performChoice(Choice choice) {
-        return commandMap.getOrDefault(choice, new Command() {
-            @Override
-            public OperationResult execute() {
-                return new OperationResult(OperationResultType.FAULT, "Wrong choice. Try again.");
-            }
-        }).execute();
+        return commandHolder.findCommandByChoice(choice).execute();
     }
 
     @Override

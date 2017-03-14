@@ -1,6 +1,6 @@
 package pos.controller;
 
-import pos.View;
+import pos.view.View;
 import pos.model.*;
 import pos.model.value.object.user.choice.Choice;
 import pos.model.value.object.user.choice.Choices;
@@ -24,7 +24,7 @@ public class Controller {
     }
 
     /**
-     * runs main game cycle
+     * runs main cycle
      */
     public void operate() {
         OperationResult result;
